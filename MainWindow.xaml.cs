@@ -19,10 +19,15 @@ namespace Calculator
    
     public partial class MainWindow : Window
     {
+        int i = 0;
+        string[] num=new string [4];
+        string firstMain = "";
         public MainWindow()
         {
             InitializeComponent();
-          
+
+            
+
         }
 
         bool clickedOnNumber = false;
@@ -46,26 +51,21 @@ namespace Calculator
         public void opeerand(Button button)
         { 
             clickedOnOperand = true;
-
+            
 
             if (clickedOnNumber && tbMain.Text!="0")
             {
-                string[] num = tbSide.Text.Split(" ");
+                num = tbSide.Text.Split(" ");
                 if (num[1]=="*")
-                {
-                    tbMain.Text = (double.Parse(num[0]) *double.Parse(tbMain.Text)).ToString();
-                }
-
+                { tbMain.Text = (double.Parse(num[0]) *double.Parse(tbMain.Text)).ToString();  }
                 if (num[1] == "/")
-                { tbMain.Text = (double.Parse(num[0])/ double.Parse(tbMain.Text)).ToString(); }
+                { tbMain.Text = (double.Parse(num[0])/ double.Parse(tbMain.Text)).ToString();  }
 
                 if (num[1] == "+")
                 { tbMain.Text = (double.Parse(tbMain.Text) + double.Parse(num[0])).ToString(); }
 
                 if (num[1] == "-")
                 { tbMain.Text = (double.Parse(num[0]) - double.Parse(tbMain.Text)).ToString(); }
-
-               
             }
             tbSide.Text = tbMain.Text + " " + button.Content;
 
@@ -74,8 +74,36 @@ namespace Calculator
 
         public void Equall(Button button)
         {
-            opeerand(btnEqual);
-            tbSide.Text = tbSide.Text +" " + tbMain.Text+ "=";
+            
+           
+            num = tbSide.Text.Split(' ');
+            if (i==0)
+            {
+                firstMain = tbMain.Text;
+                i++;
+            }           
+            if (num.Contains("="))
+            {
+                
+                num[0] =tbMain.Text;
+            }
+                if (num[1] == "*")
+                {
+                     tbMain.Text = (double.Parse(num[0]) * double.Parse(firstMain)).ToString(); 
+                }
+                if (num[1] == "/")
+                { tbMain.Text = (double.Parse(num[0]) / double.Parse(firstMain)).ToString(); }
+
+                if (num[1] == "+")
+                { tbMain.Text = (double.Parse(tbMain.Text) + double.Parse(firstMain)).ToString(); }
+
+                if (num[1] == "-")
+                { tbMain.Text = (double.Parse(num[0]) - double.Parse(firstMain)).ToString(); }
+
+                tbSide.Text = $"{num[0]} {num[1]} {firstMain} =";
+            
+            
+
         }
         private void btn7_Click(object sender, RoutedEventArgs e)
         {
@@ -124,7 +152,7 @@ namespace Calculator
 
         private void brnClear_Click(object sender, RoutedEventArgs e)
         {
-            tbMain.Text = "0";
+            tbMain.Text = "";
             tbSide.Text = "";
         }
 
