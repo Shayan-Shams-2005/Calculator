@@ -19,14 +19,16 @@ namespace Calculator
    
     public partial class MainWindow : Window
     {
+        bool c=false;
         int i = 0;
+        int j = 0;
         string[] num=new string [4];
         string firstMain = "";
         public MainWindow()
         {
             InitializeComponent();
 
-            
+            tbMain.Text = "0";
 
         }
 
@@ -40,23 +42,35 @@ namespace Calculator
                     clickedOnOperand = false;
                     clickedOnNumber=true;
                     tbMain.Text = button.Content.ToString();
-                }
+}
                 else
                 {
-                    tbMain.Text += button.Content.ToString();
+                tbMain.Text += button.Content.ToString();
                 }
-            
+              
         }
 
         public void opeerand(Button button)
         { 
             clickedOnOperand = true;
-            
 
-            if (clickedOnNumber && tbMain.Text!="0")
+            string b=tbSide.Text;
+
+            if (tbSide.Text.Contains("("))
+            {   string a=tbMain.Text + " " + button.Content;
+                string[] num = a.Split();
+                c = true;
+            }
+            else if (!tbSide.Text.Contains("("))
             {
-                num = tbSide.Text.Split(" ");
-                if (num[1]=="*")
+                string[] num = tbSide.Text.Split();
+            }
+
+           
+            if (clickedOnNumber && tbMain.Text!="0" && tbSide.Text != "")
+            {
+
+                if (num[1]=="*" )
                 { tbMain.Text = (double.Parse(num[0]) *double.Parse(tbMain.Text)).ToString();  }
                 if (num[1] == "/")
                 { tbMain.Text = (double.Parse(num[0])/ double.Parse(tbMain.Text)).ToString();  }
@@ -67,7 +81,14 @@ namespace Calculator
                 if (num[1] == "-")
                 { tbMain.Text = (double.Parse(num[0]) - double.Parse(tbMain.Text)).ToString(); }
             }
-            tbSide.Text = tbMain.Text + " " + button.Content;
+            if (c)
+            {
+                tbSide.Text = b + " " + button.Content;
+            }
+            else
+            {
+                tbSide.Text = tbMain.Text + " " + button.Content;
+            }
 
             clickedOnNumber = false;
         }
@@ -95,15 +116,12 @@ namespace Calculator
                 { tbMain.Text = (double.Parse(num[0]) / double.Parse(firstMain)).ToString(); }
 
                 if (num[1] == "+")
-                { tbMain.Text = (double.Parse(tbMain.Text) + double.Parse(firstMain)).ToString(); }
+                { tbMain.Text = (double.Parse(num[0]) + double.Parse(firstMain)).ToString(); }
 
                 if (num[1] == "-")
                 { tbMain.Text = (double.Parse(num[0]) - double.Parse(firstMain)).ToString(); }
 
                 tbSide.Text = $"{num[0]} {num[1]} {firstMain} =";
-            
-            
-
         }
         private void btn7_Click(object sender, RoutedEventArgs e)
         {
@@ -152,7 +170,7 @@ namespace Calculator
 
         private void brnClear_Click(object sender, RoutedEventArgs e)
         {
-            tbMain.Text = "";
+            tbMain.Text = "0";
             tbSide.Text = "";
         }
 
@@ -168,7 +186,18 @@ namespace Calculator
 
         private void btnX2_Click(object sender, RoutedEventArgs e)
         {
+            if (j == 0)
+            {
+                tbSide.Text = $"sqr({tbMain.Text})";
+                j++;
+            }
+            else 
+            {
+             tbSide.Text= $"sqr({tbSide.Text})";
+            }
 
+                tbMain.Text = Math.Pow(int.Parse(tbMain.Text), 2).ToString();
+           
         }
 
         private void btnRX_Click(object sender, RoutedEventArgs e)
@@ -189,6 +218,18 @@ namespace Calculator
         private void btnCE_Click(object sender, RoutedEventArgs e)
         {
 
+            if (!tbSide.Text.Contains("="))
+            {
+                tbMain.Text = "0";
+                firstMain = tbMain.Text;
+            }
+             if (tbSide.Text.Contains("=") || tbSide.Text.Contains("sqr"))
+            {
+                tbMain.Text = "0";
+                firstMain = tbMain.Text;
+                tbSide.Text = "";
+            }
+            i = 0;
         }
 
         private void btnMinus_Click(object sender, RoutedEventArgs e)
